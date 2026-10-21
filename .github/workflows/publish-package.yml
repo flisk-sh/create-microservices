@@ -128,11 +128,10 @@ jobs:
           fi
           echo "tarball=$alias_dir/$alias_tarball" >> "$GITHUB_OUTPUT"
 
-      - name: Publish to npm
+      - name: Publish to npm (OIDC trusted publishing)
         env:
           PACKAGE_TARBALL: ${{ steps.package.outputs.tarball }}
           PACKAGE_VERSION: ${{ steps.package.outputs.version }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
@@ -145,11 +144,10 @@ jobs:
             exit 1
           }
 
-      - name: Publish the scoped package to npm
+      - name: Publish the scoped package to npm (OIDC trusted publishing)
         env:
           PACKAGE_TARBALL: ${{ steps.scoped-package.outputs.tarball }}
           PACKAGE_VERSION: ${{ steps.package.outputs.version }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
