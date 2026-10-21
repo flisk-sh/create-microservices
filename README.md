@@ -1,6 +1,6 @@
 # create-microservices
 
-Interactive project scaffolder for local-first microservice stacks. It uses [TDK CLI Core](https://github.com/tdk-landscape/tdk-cli-core) to generate the project configuration and service files.
+Interactive project scaffolder for local-first microservice stacks. It uses [TDK CLI Core](https://github.com/flisk-sh/flisk) to generate the project configuration and service files.
 
 This is a project creator, not a replacement for the TDK runtime. It creates a project and the selected service skeletons; it does not start Docker containers automatically.
 
@@ -11,7 +11,7 @@ This is a project creator, not a replacement for the TDK runtime. It creates a p
 - Tilt
 - Bun 1.2+
 
-TDK checks machine readiness while initializing a project. See the [TDK CLI Core setup guide](https://github.com/tdk-landscape/tdk-cli-core#requirements-and-support) for platform details.
+TDK checks machine readiness while initializing a project. See the [TDK CLI Core setup guide](https://github.com/flisk-sh/flisk#requirements-and-support) for platform details.
 
 ## Create a project
 

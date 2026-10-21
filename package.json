@@ -24,11 +24,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tdk-landscape/create-microservices.git"
+    "url": "https://github.com/flisk-sh/create-microservices.git"
   },
-  "homepage": "https://github.com/tdk-landscape/create-microservices#readme",
+  "homepage": "https://github.com/flisk-sh/create-microservices#readme",
   "bugs": {
-    "url": "https://github.com/tdk-landscape/create-microservices/issues"
+    "url": "https://github.com/flisk-sh/create-microservices/issues"
   },
   "keywords": [
     "tdk",
