@@ -5,16 +5,18 @@ import { stdin, stdout } from 'node:process';
 import { createRequire } from 'node:module';
 import { spawnSync } from 'node:child_process';
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
-import { basename, isAbsolute, resolve } from 'node:path';
+import { basename, delimiter, isAbsolute, resolve } from 'node:path';
 
 const SERVICE_TYPES = new Set(['backend', 'frontend', 'worker', 'mcp']);
 const DEFAULT_SERVICES = [
   { name: 'api', type: 'backend' },
   { name: 'web', type: 'frontend' },
 ];
+const CLI_PACKAGES = ['@flisk-sh/flisk', 'flisk'];
+const CLI_EXECUTABLES = ['flisk', 'tdk'];
 
 function usage() {
-  console.log(`Create a TDK microservice project\n\nUsage:\n  npm init @tdk-landscape/microservices [directory] [options]\n\nOptions:\n  --service <name[:type]>  Add a service (repeatable; types: ${[...SERVICE_TYPES].join(', ')})\n  --stack <name>           TDK stack name (default: main)\n  --yes                    Use api:backend and web:frontend when no services are specified\n  -h, --help               Show this help\n\nExample:\n  npm init @tdk-landscape/microservices storefront -- --service catalog:backend --service web:frontend`);
+  console.log(`Create a TDK microservice project\n\nUsage:\n  npm init create-microservices [directory] [options]\n\nOptions:\n  --service <name[:type]>  Add a service (repeatable; types: ${[...SERVICE_TYPES].join(', ')})\n  --stack <name>           TDK stack name (default: main)\n  --yes                    Use api:backend and web:frontend when no services are specified\n  -h, --help               Show this help\n\nExample:\n  npm init create-microservices storefront -- --service catalog:backend --service web:frontend`);
 }
 
 function parseArgs(args) {
@@ -103,10 +105,51 @@ function ensureTarget(directory) {
   return target;
 }
 
-function runTdk(args, cwd) {
+function resolveCliModule() {
   const require = createRequire(import.meta.url);
-  const tdkBin = require.resolve('@tdk-landscape/tdk-cli-core/cli/bin/tdk.js');
-  const result = spawnSync(process.execPath, [tdkBin, ...args], { cwd, stdio: 'inherit' });
+  for (const pkg of CLI_PACKAGES) {
+    try {
+      return require.resolve(`${pkg}/cli/bin/flisk.js`);
+    } catch {
+      continue;
+    }
+  }
+  return undefined;
+}
+
+function findOnPath(name) {
+  for (const dir of (process.env.PATH ?? '').split(delimiter)) {
+    if (!dir) continue;
+    const candidate = resolve(dir, name);
+    if (existsSync(candidate)) return candidate;
+  }
+  return undefined;
+}
+
+function resolveCli() {
+  const override = process.env.FLISK_CLI_PATH;
+  if (override) {
+    return override.endsWith('.js')
+      ? { command: process.execPath, prefix: [override] }
+      : { command: override, prefix: [] };
+  }
+
+  const cliModule = resolveCliModule();
+  if (cliModule) return { command: process.execPath, prefix: [cliModule] };
+
+  for (const name of CLI_EXECUTABLES) {
+    const executable = findOnPath(name);
+    if (executable) return { command: executable, prefix: [] };
+  }
+
+  throw new Error(
+    'The Flisk CLI was not found. Install it with `npm install --global @flisk-sh/flisk` or put `flisk` on your PATH.',
+  );
+}
+
+function runFlisk(args, cwd) {
+  const cli = resolveCli();
+  const result = spawnSync(cli.command, [...cli.prefix, ...args], { cwd, stdio: 'inherit' });
   if (result.error) throw result.error;
   if (result.status !== 0) process.exit(result.status ?? 1);
 }
@@ -118,7 +161,7 @@ function alignProjectName(target) {
   if (project.project?.name !== projectName) {
     project.project.name = projectName;
     writeFileSync(configPath, `${JSON.stringify(project, null, 2)}\n`);
-    runTdk(['project', '--yes'], target);
+    runFlisk(['project', '--yes'], target);
   }
 }
 
@@ -142,11 +185,11 @@ async function main() {
 
   const target = ensureTarget(directory);
   console.log(`\nCreating TDK project in ${target}`);
-  runTdk(['project', '--yes'], target);
+  runFlisk(['project', '--yes'], target);
   alignProjectName(target);
   for (const service of services) {
     console.log(`\nScaffolding ${service.type}: ${service.name}`);
-    runTdk(['resource', service.name, '--type', service.type, '--stack', options.stack, '--yes'], target);
+    runFlisk(['resource', service.name, '--type', service.type, '--stack', options.stack, '--yes'], target);
   }
 
   console.log(`\nProject created. Next:\n  cd ${isAbsolute(directory) ? target : directory}\n  tdk up ${options.stack}`);
