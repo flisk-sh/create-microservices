@@ -33,7 +33,7 @@ after(() => {
   }
 });
 
-test('creates the default API and web services through TDK CLI Core', () => {
+test('creates the default API and web services through the Flisk CLI', () => {
   const parent = createTempDirectory();
   const target = join(parent, 'default-stack');
   const result = runCli([target, '--yes']);
@@ -56,7 +56,7 @@ test('creates the default API and web services through TDK CLI Core', () => {
   assert.match(readFileSync(join(target, '.tdk', '.tdk-out', 'Tiltfile'), 'utf8'), /load\(/);
 });
 
-test('passes custom stack and all supported service types to TDK CLI Core', () => {
+test('passes custom stack and all supported service types to the Flisk CLI', () => {
   const parent = createTempDirectory();
   const target = join(parent, 'commerce');
   const result = runCli([
