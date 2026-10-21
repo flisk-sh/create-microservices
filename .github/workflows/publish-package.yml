@@ -34,8 +34,8 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: npm
+          node-version: 24
+          registry-url: https://registry.npmjs.org
 
       # Trusted publishing needs an npm CLI that speaks OIDC; the bundled npm is too old.
       - name: Update npm for trusted publishing
