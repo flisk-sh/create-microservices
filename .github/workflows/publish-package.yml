@@ -132,6 +132,7 @@ jobs:
         env:
           PACKAGE_TARBALL: ${{ steps.package.outputs.tarball }}
           PACKAGE_VERSION: ${{ steps.package.outputs.version }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
@@ -148,6 +149,7 @@ jobs:
         env:
           PACKAGE_TARBALL: ${{ steps.scoped-package.outputs.tarball }}
           PACKAGE_VERSION: ${{ steps.package.outputs.version }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
