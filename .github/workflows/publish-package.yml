@@ -59,7 +59,10 @@ jobs:
           fi
 
           mkdir -p "$RUNNER_TEMP/create-microservices-package"
-          npm pack --json --pack-destination "$RUNNER_TEMP/create-microservices-package" > "$RUNNER_TEMP/create-microservices-pack.json" 2>/dev/null
+          npm pack --json --pack-destination "$RUNNER_TEMP/create-microservices-package" > "$RUNNER_TEMP/create-microservices-pack.json" 2>&1
+          echo "=== pack.json contents ==="
+          cat "$RUNNER_TEMP/create-microservices-pack.json"
+          echo "=== end pack.json ==="
           tarball="$RUNNER_TEMP/create-microservices-package/$(node -p "JSON.parse(require('fs').readFileSync(process.env.RUNNER_TEMP + '/create-microservices-pack.json', 'utf8'))[0].filename")"
           if [[ ! -f "$tarball" ]]; then
             echo "::error::npm pack did not produce the expected package archive."
