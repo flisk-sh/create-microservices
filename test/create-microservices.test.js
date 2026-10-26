@@ -41,7 +41,7 @@ test('creates the default API and web services through the Flisk CLI', () => {
   assert.equal(result.status, 0, result.stderr || result.stdout);
   assert.match(result.stdout, /Project created\./);
 
-  const project = readJson(join(target, '.tdk', 'project.json'));
+  const project = readJson(join(target, '.flisk', 'project.json'));
   assert.equal(project.project.name, 'default_stack');
 
   for (const [name, type] of [['api', 'backend'], ['web', 'frontend']]) {
@@ -53,7 +53,7 @@ test('creates the default API and web services through the Flisk CLI', () => {
     assert.ok(existsSync(join(serviceDirectory, 'Dockerfile')));
   }
 
-  assert.match(readFileSync(join(target, '.tdk', '.tdk-out', 'Tiltfile'), 'utf8'), /load\(/);
+  assert.match(readFileSync(join(target, '.flisk', '.flisk-out', 'Tiltfile'), 'utf8'), /load\(/);
 });
 
 test('passes custom stack and all supported service types to the Flisk CLI', () => {

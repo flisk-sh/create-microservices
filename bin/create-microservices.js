@@ -13,10 +13,10 @@ const DEFAULT_SERVICES = [
   { name: 'web', type: 'frontend' },
 ];
 const CLI_PACKAGES = ['@flisk-sh/flisk', 'flisk'];
-const CLI_EXECUTABLES = ['flisk', 'tdk'];
+const CLI_EXECUTABLES = ['flisk', 'flisk'];
 
 function usage() {
-  console.log(`Create a TDK microservice project\n\nUsage:\n  npm init create-microservices [directory] [options]\n\nOptions:\n  --service <name[:type]>  Add a service (repeatable; types: ${[...SERVICE_TYPES].join(', ')})\n  --stack <name>           TDK stack name (default: main)\n  --yes                    Use api:backend and web:frontend when no services are specified\n  -h, --help               Show this help\n\nExample:\n  npm init create-microservices storefront -- --service catalog:backend --service web:frontend`);
+  console.log(`Create a Flisk microservice project\n\nUsage:\n  npm init create-microservices [directory] [options]\n\nOptions:\n  --service <name[:type]>  Add a service (repeatable; types: ${[...SERVICE_TYPES].join(', ')})\n  --stack <name>           Flisk stack name (default: main)\n  --yes                    Use api:backend and web:frontend when no services are specified\n  -h, --help               Show this help\n\nExample:\n  npm init create-microservices storefront -- --service catalog:backend --service web:frontend`);
 }
 
 function parseArgs(args) {
@@ -155,7 +155,7 @@ function runFlisk(args, cwd) {
 }
 
 function alignProjectName(target) {
-  const configPath = resolve(target, '.tdk', 'project.json');
+  const configPath = resolve(target, '.flisk', 'project.json');
   const project = JSON.parse(readFileSync(configPath, 'utf8'));
   const projectName = basename(target).replaceAll('-', '_');
   if (project.project?.name !== projectName) {
@@ -184,7 +184,7 @@ async function main() {
   }
 
   const target = ensureTarget(directory);
-  console.log(`\nCreating TDK project in ${target}`);
+  console.log(`\nCreating Flisk project in ${target}`);
   runFlisk(['project', '--yes'], target);
   alignProjectName(target);
   for (const service of services) {
