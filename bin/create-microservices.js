@@ -192,7 +192,7 @@ async function main() {
     runFlisk(['resource', service.name, '--type', service.type, '--stack', options.stack, '--yes'], target);
   }
 
-  console.log(`\nProject created. Next:\n  cd ${isAbsolute(directory) ? target : directory}\n  tdk up ${options.stack}`);
+  console.log(`\nProject created. Next:\n  cd ${isAbsolute(directory) ? target : directory}\n  flisk up ${options.stack}`);
 }
 
 main().catch((error) => {

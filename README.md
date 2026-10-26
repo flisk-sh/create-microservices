@@ -2,7 +2,7 @@
 
 Interactive project scaffolder for local-first microservice stacks. It uses the [Flisk CLI](https://github.com/flisk-sh/flisk) to generate the project configuration and service files.
 
-This is a project creator, not a replacement for the TDK runtime. It creates a project and the selected service skeletons; it does not start Docker containers automatically.
+This is a project creator, not a replacement for the Flisk runtime. It creates a project and the selected service skeletons; it does not start Docker containers automatically.
 
 ## Requirements
 
@@ -11,7 +11,7 @@ This is a project creator, not a replacement for the TDK runtime. It creates a p
 - Tilt
 - Bun 1.2+
 
-TDK checks machine readiness while initializing a project. See the [Flisk CLI setup guide](https://github.com/flisk-sh/flisk#requirements-and-support) for platform details.
+Flisk checks machine readiness while initializing a project. See the [Flisk CLI setup guide](https://github.com/flisk-sh/flisk#requirements-and-support) for platform details.
 
 ## Create a project
 
@@ -23,10 +23,10 @@ The interactive prompts ask how many services to create and their names and type
 
 ```bash
 cd storefront
-tdk up main
+flisk up main
 ```
 
-The scaffolder ships the Flisk CLI as a dependency, so the CLI is always available while scaffolding. Install it globally as well if you want `tdk` on your PATH:
+The scaffolder ships the Flisk CLI as a dependency, so the CLI is always available while scaffolding. Install it globally as well if you want `flisk` on your PATH:
 
 ```bash
 npm install --global @flisk-sh/flisk@1.3.189
