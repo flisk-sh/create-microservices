@@ -113,3 +113,20 @@ test('refuses to scaffold into a non-empty directory without changing its files'
   assert.match(result.stderr, /target directory is not empty/i);
   assert.equal(readFileSync(sentinel, 'utf8'), 'preserve this file\n');
 });
+
+test('prints a runnable cd command for a target path with spaces and an apostrophe', {
+  skip: process.platform === 'win32',
+}, () => {
+  const target = join(createTempDirectory(), "merchant's workspace", 'shop');
+  const result = runCli([target, '--service', 'api:backend']);
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+
+  const lines = result.stdout.split('\n');
+  const nextSteps = lines.indexOf('Project created. Next:');
+  assert.notEqual(nextSteps, -1, result.stdout);
+  const cd = lines[nextSteps + 1];
+  assert.match(cd, /^  cd /);
+  const next = spawnSync('/bin/sh', ['-c', `${cd} && pwd`], { encoding: 'utf8' });
+  assert.equal(next.status, 0, next.stderr);
+  assert.equal(next.stdout.trim(), target);
+});

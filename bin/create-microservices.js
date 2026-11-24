@@ -193,7 +193,11 @@ async function main() {
     runFlisk(['resource', service.name, '--type', service.type, '--stack', options.stack, '--yes'], target);
   }
 
-  console.log(`\nProject created. Next:\n  cd ${isAbsolute(directory) ? target : directory}\n  flisk up ${options.stack}`);
+  const nextDirectory = isAbsolute(directory) ? target : directory;
+  const cdArgument = process.platform === 'win32' || /^[\w./-]+$/.test(nextDirectory)
+    ? nextDirectory
+    : `'${nextDirectory.replaceAll("'", "'\\''")}'`;
+  console.log(`\nProject created. Next:\n  cd ${cdArgument}\n  flisk up ${options.stack}`);
 }
 
 main().catch((error) => {
